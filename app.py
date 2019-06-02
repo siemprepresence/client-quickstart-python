@@ -20,13 +20,15 @@ def index():
 
 @app.route('/token', methods=['GET'])
 def token():
+    if request.args.get('identity'):
+        identity = request.args.get('identity')
+    else:
+        identity = alphanumeric_only.sub('', fake.user_name())
+
     # get credentials for environment variables
     account_sid = os.environ['TWILIO_ACCOUNT_SID']
     auth_token = os.environ['TWILIO_AUTH_TOKEN']
     application_sid = os.environ['TWILIO_TWIML_APP_SID']
-
-    # Generate a random user name
-    identity = alphanumeric_only.sub('', fake.user_name())
 
     # Create a Capability Token
     capability = ClientCapabilityToken(account_sid, auth_token)
